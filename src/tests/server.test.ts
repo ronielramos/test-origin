@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import app from './server'
+import app from '../config/server'
 import request from 'supertest'
 
 describe('server', () => {

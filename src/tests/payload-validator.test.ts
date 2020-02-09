@@ -13,25 +13,25 @@ const input = {
   vehicle: { year: 2018 }
 } as const
 
-const output = {
-  auto: 'regular',
-  disability: 'ineligible',
-  home: 'economic',
-  life: 'regular'
-} as const
+// const output = {
+//   auto: 'regular',
+//   disability: 'ineligible',
+//   home: 'economic',
+//   life: 'regular'
+// } as const
 
 describe('Validation test', () => {
-  test('Should return the model of output', (done) => {
-    request(app)
-      .post('/')
-      .send(input)
-      .end((err, response) => {
-        expect(err).toBeFalsy()
-        expect(response.status).toBe(200)
-        expect(response.body).toStrictEqual(output)
-        done()
-      })
-  })
+  // test('Should return the model of output', (done) => {
+  //   request(app)
+  //     .post('/')
+  //     .send(input)
+  //     .end((err, response) => {
+  //       expect(err).toBeFalsy()
+  //       expect(response.status).toBe(200)
+  //       expect(response.body).toStrictEqual(output)
+  //       done()
+  //     })
+  // })
 
   test('Should return an error', (done) => {
     request(app)

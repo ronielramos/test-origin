@@ -1,5 +1,5 @@
 import { SchemaLike, ObjectSchema } from '@hapi/joi'
-import { MaritalStatus, OwnershipStatus, InsuranceRange, InsuranceType } from './risk.enum'
+import { MaritalStatus, OwnershipStatus, InsuranceRange, InsuranceType } from './risk-profile.enum'
 
 export interface HouseQuestion {
   ownership_status: OwnershipStatus;

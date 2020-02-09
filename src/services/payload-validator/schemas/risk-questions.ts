@@ -1,7 +1,6 @@
-import { RiskQuestionsSchema } from '../module/risk'
 
-import { MaritalStatus, OwnershipStatus } from '../module/risk.enum'
-
+import { RiskQuestionsSchema } from '../../../risk-profile/@types/risk-profile'
+import { MaritalStatus, OwnershipStatus } from '../../../risk-profile/@types/risk-profile.enum'
 import Joi = require('@hapi/joi');
 
 const riskQuestionsSchema: RiskQuestionsSchema = {
@@ -14,11 +13,4 @@ const riskQuestionsSchema: RiskQuestionsSchema = {
   vehicle: Joi.object().optional().keys({ year: Joi.number().integer().min(0).required() })
 }
 
-const schemaToValidate = Joi.object().keys(riskQuestionsSchema).required()
-
-export const validatePayload = <T>(body: unknown, schema = schemaToValidate): T => {
-  const validation = schema.validate(body)
-  if (validation.error) throw validation.error
-
-  return body as T
-}
+export default Joi.object().keys(riskQuestionsSchema).required()

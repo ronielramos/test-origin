@@ -27,17 +27,17 @@ export const calculateRisk = (riskQuestion: RiskQuestions, riskCalculators: Risk
 
   const insurancesResult: Partial<RiskProfileModel>[] = riskCalculators.map(riskValidator => riskValidator(riskQuestion))
 
-  insurancesResult.forEach((partialInsurance) => {
-    for (const key of keys) {
-      if (
-        typeof partialInsurance[key] === 'number' &&
-        typeof initialRiskProfile[key] === 'number'
-      ) {
-        (initialRiskProfile[key] as number) += (partialInsurance[key] as number)
-      }
-    }
-  })
+  insurancesResult.forEach(partialInsurance => {
+    keys.forEach(key => {
+      if (partialInsurance[key] == null) return
 
+      const partialValueIsNumber = typeof partialInsurance[key] === 'number'
+      const initialValueIsNumber = typeof initialRiskProfile[key] === 'number'
+
+      if (partialValueIsNumber && initialValueIsNumber) (initialRiskProfile[key] as number) += (partialInsurance[key] as number)
+      else initialRiskProfile[key] = false
+    })
+  })
   return initialRiskProfile
 }
 

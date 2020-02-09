@@ -5,11 +5,9 @@ import { RiskCalculatorFN } from './risk-calculator'
 export const propertysAndIncomesValidate: RiskCalculatorFN = riskQuestions => {
   const insurancePartialCalc: Partial<RiskProfileModel> = {}
 
-  if (!riskQuestions.house && !riskQuestions.vehicle && !riskQuestions.income) {
-    insurancePartialCalc.disability = false
-    insurancePartialCalc.auto = false
-    insurancePartialCalc.home = false
-  }
+  if (!riskQuestions.house) insurancePartialCalc.home = false
+  if (!riskQuestions.vehicle) insurancePartialCalc.auto = false
+  if (!riskQuestions.income) insurancePartialCalc.disability = false
 
   return insurancePartialCalc
 }

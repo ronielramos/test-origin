@@ -4,8 +4,7 @@ module.exports = {
     es6: true
   },
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     'standard'
   ],
   globals: {
@@ -20,5 +19,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
+    'camelcase': 'off',
+    '@typescript-eslint/camelcase': 'off',
   }
 }

@@ -1,7 +1,7 @@
 import express from 'express'
 import cors, { CorsOptions } from 'cors'
 import helmet from 'helmet'
-import router from '../module/router'
+import router from '../module/risk.router'
 
 const app = express()
 

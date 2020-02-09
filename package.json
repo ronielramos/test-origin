@@ -11,7 +11,14 @@
     "lint": "eslint src/**/*.ts --fix",
     "prebuild": "rimraf dist",
     "start": "nodemon src/app.ts",
-    "test": "jest"
+    "test": "jest",
+    "prod": "pm2 start dist/app.js",
+    "prod:stop": "pm2 stop all",
+    "prod:reload": "pm2 reload all",
+    "prod:restart": "pm2 restart all",
+    "prod:list": "pm2 ls",
+    "prod:monit": "pm2 monit"
+
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
@@ -23,6 +30,7 @@
     "jest": "^25.1.0",
     "log4js": "^6.1.1",
     "morgan": "^1.9.1",
+    "pm2": "^4.2.3",
     "supertest": "^4.0.2"
   },
   "devDependencies": {

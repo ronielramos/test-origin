@@ -1,11 +1,11 @@
 import { SchemaLike, ObjectSchema } from '@hapi/joi'
 import { MaritalStatus, OwnershipStatus, InsuranceRange, InsuranceType } from './risk-profile.enum'
 
-export interface HouseQuestion {
+export interface HouseInfo {
   ownership_status: OwnershipStatus;
 }
 
-export interface UserQuestion {
+export interface UserInfo {
   age: number;
   dependents: number;
   income: number;
@@ -13,22 +13,22 @@ export interface UserQuestion {
   risk_questions: [boolean, boolean, boolean];
 }
 
-export interface VehicleQuestion {
+export interface VehicleInfo {
   year: number;
 }
 
-export interface RiskQuestions extends UserQuestion {
-  house?: HouseQuestion;
-  vehicle?: VehicleQuestion;
+export interface InteractionResult extends UserInfo {
+  house?: HouseInfo;
+  vehicle?: VehicleInfo;
 }
 
-export type UserQuestionSchema = Record<keyof UserQuestion, SchemaLike>
-export type HouseQuestionSchema = ObjectSchema<unknown>
-export type VehicleQuestionSchema = ObjectSchema<unknown>
-export type RiskQuestionsSchema = UserQuestionSchema & { house: HouseQuestionSchema; vehicle: VehicleQuestionSchema }
+export type UserInfoSchema = Record<keyof UserInfo, SchemaLike>
+export type HouseInfoSchema = ObjectSchema<unknown>
+export type VehicleInfoSchema = ObjectSchema<unknown>
+export type InteractionResultSchema = UserInfoSchema & { house: HouseInfoSchema; vehicle: VehicleInfoSchema }
 
 export type RiskProfile = Record<InsuranceType, InsuranceRange>
 
-export type RiskProfileModel = Record<InsuranceType, number | false>
+export type RiskProfileCounted = Record<InsuranceType, number | false>
 
-export type RiskValidator = (riskQuestions: RiskQuestions) => Partial<RiskProfileModel>
+export type ScoreCount = (interactionResult: InteractionResult) => Partial<RiskProfileCounted>

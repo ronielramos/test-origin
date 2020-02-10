@@ -1,9 +1,9 @@
 
-import { RiskQuestionsSchema } from '../../../risk-profile/@types/risk-profile'
-import { MaritalStatus, OwnershipStatus } from '../../../risk-profile/@types/risk-profile.enum'
+import { InteractionResultSchema } from './@types/risk-profile'
+import { MaritalStatus, OwnershipStatus } from './@types/risk-profile.enum'
 import Joi = require('@hapi/joi');
 
-const riskQuestionsSchema: RiskQuestionsSchema = {
+const riskProfileAnsweredQuestionsSchema: InteractionResultSchema = {
   age: Joi.number().min(0).integer().required(),
   dependents: Joi.number().integer().min(0).required(),
   income: Joi.number().integer().min(0).required(),
@@ -13,4 +13,4 @@ const riskQuestionsSchema: RiskQuestionsSchema = {
   vehicle: Joi.object().optional().keys({ year: Joi.number().integer().min(0).required() })
 }
 
-export default Joi.object().keys(riskQuestionsSchema).required()
+export const risProfileInteractionResultSchema = Joi.object().keys(riskProfileAnsweredQuestionsSchema).required()

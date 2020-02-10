@@ -1,8 +1,9 @@
-import { RiskQuestions, RiskValidator, RiskProfileModel, RiskProfile } from './@types/risk-profile'
+import { InteractionResult, RiskProfileCounted, RiskProfile } from './@types/risk-profile'
 import { InsuranceRange } from './@types/risk-profile.enum'
-import { vehicleValidate } from '../services/risk-calculator/vehicle'
-import { houseValidate } from '../services/risk-calculator/house'
-import { ageValidate, maritalValidate, propertysAndIncomesValidate, dependentsValidate } from '../services/risk-calculator/user'
+import { countHouseOwnershipScore, countHasHouseScore } from '../services/score/counters/house.counter'
+import { countVehicleYearScore, countHasVehicleScore } from '../services/score/counters/vehicle.counter'
+import { countHasIncomeScore, countHasDependentsScore, countMartitalStatusScore, countHighIncomeScore, countYoungPeopleAgeScore, countMiddlePeopleAgeScore, countOlderPeopleScore } from '../services/score/counters/user.counter'
+import { countScore } from '../services/score/score.counter'
 
 const normalizeRange = (value: number | boolean): InsuranceRange => {
   if (value === false) return InsuranceRange.ineligible
@@ -12,7 +13,7 @@ const normalizeRange = (value: number | boolean): InsuranceRange => {
   return InsuranceRange.regular
 }
 
-export const fromEntries = <Return, ListItem>(item: [string, ListItem][]): Return => {
+const fromEntries = <Return, ListItem>(item: [string, ListItem][]): Return => {
   const defaultObj: { [key: string]: unknown } = {}
 
   item.forEach(([key, value]) => {
@@ -22,47 +23,33 @@ export const fromEntries = <Return, ListItem>(item: [string, ListItem][]): Retur
   return defaultObj as unknown as Return
 }
 
-export const calculateRisk = (riskQuestion: RiskQuestions, riskCalculators: RiskValidator[], initialRiskProfile: RiskProfileModel): RiskProfileModel => {
-  const keys = Object.keys(initialRiskProfile) as (keyof RiskProfileModel)[]
-
-  const insurancesResult: Partial<RiskProfileModel>[] = riskCalculators.map(riskValidator => riskValidator(riskQuestion))
-
-  insurancesResult.forEach(partialInsurance => {
-    keys.forEach(key => {
-      if (partialInsurance[key] == null) return
-
-      const partialValueIsNumber = typeof partialInsurance[key] === 'number'
-      const initialValueIsNumber = typeof initialRiskProfile[key] === 'number'
-
-      if (partialValueIsNumber && initialValueIsNumber) (initialRiskProfile[key] as number) += (partialInsurance[key] as number)
-      else initialRiskProfile[key] = false
-    })
-  })
-  return initialRiskProfile
-}
-
-export const determinateRiskProfile = (riskQuestion: RiskQuestions): RiskProfile => {
-  const riskProfileValidators = [
-    vehicleValidate,
-    houseValidate,
-    ageValidate,
-    maritalValidate,
-    propertysAndIncomesValidate,
-    dependentsValidate
+export const determinateRiskProfile = (interactionResult: InteractionResult): RiskProfile => {
+  const scoreCounters = [
+    countHasIncomeScore,
+    countHasHouseScore,
+    countHouseOwnershipScore,
+    countHasVehicleScore,
+    countVehicleYearScore,
+    countHasDependentsScore,
+    countMartitalStatusScore,
+    countHighIncomeScore,
+    countYoungPeopleAgeScore,
+    countMiddlePeopleAgeScore,
+    countOlderPeopleScore
   ]
 
-  const baseValue = riskQuestion.risk_questions.filter((question) => question).length
-  const riskProfileBase: RiskProfileModel = {
-    auto: baseValue,
-    disability: baseValue,
-    home: baseValue,
-    life: baseValue
+  const initialValue = interactionResult.risk_questions.filter((question) => question).length
+  const initialRiskProfile: RiskProfileCounted = {
+    auto: initialValue,
+    disability: initialValue,
+    home: initialValue,
+    life: initialValue
   }
 
-  const calculatedRiskProfile = calculateRisk(riskQuestion, riskProfileValidators, riskProfileBase)
+  const calculatedRiskScore = countScore(interactionResult, scoreCounters, initialRiskProfile)
 
   const riskProfile: [string, InsuranceRange][] = Object
-    .entries(calculatedRiskProfile)
+    .entries(calculatedRiskScore)
     .map(([key, value]) => [key, normalizeRange(value)])
 
   return fromEntries<RiskProfile, InsuranceRange>(riskProfile)

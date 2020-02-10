@@ -1,5 +1,5 @@
 import request from 'supertest'
-import app from '../config/server'
+import app from '../../config/server'
 
 const ENDPOINT = '/risk/profile'
 
@@ -13,26 +13,8 @@ const input = {
   vehicle: { year: 2018 }
 }
 
-const output = {
-  auto: 'regular',
-  disability: 'ineligible',
-  home: 'economic',
-  life: 'regular'
-} as const
-
-describe('Risk calc validation', () => {
-  test('Should return the model of output', (done) => {
-    request(app)
-      .post(ENDPOINT)
-      .send(input)
-      .expect(200)
-      .end((_err, response) => {
-        expect(response.body).toStrictEqual(output)
-        done()
-      })
-  })
-
-  test('Should return an error', (done) => {
+describe('Payload validation', () => {
+  test(`[POST] ${ENDPOINT} - Should return an error`, (done) => {
     request(app)
       .post(ENDPOINT)
       .send({})
@@ -40,7 +22,7 @@ describe('Risk calc validation', () => {
       .end(() => done())
   })
 
-  test('Should return an error with risk_questions', (done) => {
+  test(`[POST] ${ENDPOINT} - Should return an error with risk_questions`, (done) => {
     request(app)
       .post(ENDPOINT)
       .send({ ...input, risk_questions: ['1', 'false', 'true'] })
@@ -48,7 +30,7 @@ describe('Risk calc validation', () => {
       .end(() => done())
   })
 
-  test('Should return an error with marital_status', (done) => {
+  test(`[POST] ${ENDPOINT} - Should return an error with marital_status`, (done) => {
     return request(app)
       .post(ENDPOINT)
       .send({ ...input, marital_status: 'divorced' })
@@ -56,7 +38,7 @@ describe('Risk calc validation', () => {
       .end(() => done())
   })
 
-  test('Should return an error with house ownership_status', (done) => {
+  test(`[POST] ${ENDPOINT} - Should return an error with house ownership_status`, (done) => {
     return request(app)
       .post(ENDPOINT)
       .send({ ...input, house: { ownership_status: 'unknown' } })
@@ -64,7 +46,7 @@ describe('Risk calc validation', () => {
       .end(() => done())
   })
 
-  test('Should return an error with income', (done) => {
+  test(`[POST] ${ENDPOINT} - Should return an error with income`, (done) => {
     return request(app)
       .post(ENDPOINT)
       .send({ ...input, income: -50 })
@@ -72,7 +54,7 @@ describe('Risk calc validation', () => {
       .end(() => done())
   })
 
-  test('Should return an error with house', (done) => {
+  test(`[POST] ${ENDPOINT} - Should return an error with house`, (done) => {
     return request(app)
       .post(ENDPOINT)
       .send({ ...input, house: {} })
@@ -80,7 +62,7 @@ describe('Risk calc validation', () => {
       .end(() => done())
   })
 
-  test('Should return an error with vehicle', (done) => {
+  test(`[POST] ${ENDPOINT} - Should return an error with vehicle`, (done) => {
     return request(app)
       .post(ENDPOINT)
       .send({ ...input, vehicle: {} })

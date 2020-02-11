@@ -1,10 +1,12 @@
-/* eslint-disable no-undef */
 import app from '../../config/server'
 import request from 'supertest'
 
 describe('server', () => {
-  test('[GET] / - Server should be started', async (done) => {
-    await request(app).get('/').expect(200)
-    done()
-  })
+  test('[GET] /healthcheck - Server should be started', (done) =>
+    request(app).get('/healthcheck')
+      .end((_err, response) => {
+        expect(response.status).toBe(200)
+        done()
+      })
+  )
 })

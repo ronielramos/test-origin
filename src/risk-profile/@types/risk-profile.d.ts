@@ -30,5 +30,3 @@ export type InteractionResultSchema = UserInfoSchema & { house: HouseInfoSchema;
 export type RiskProfile = Record<InsuranceType, InsuranceRange>
 
 export type RiskProfileCounted = Record<InsuranceType, number | false>
-
-export type ScoreCount = (interactionResult: InteractionResult) => Partial<RiskProfileCounted>

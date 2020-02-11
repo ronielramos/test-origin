@@ -7,10 +7,17 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "nodemon src/app.ts",
+    "build": "tsc",
     "lint": "eslint src/**/*.ts --fix",
     "prebuild": "rimraf dist",
-    "build": "tsc"
+    "start": "nodemon src/app.ts",
+    "test": "jest",
+    "prod": "pm2 start dist/app.js",
+    "prod:stop": "pm2 stop all",
+    "prod:reload": "pm2 reload all",
+    "prod:restart": "pm2 restart all",
+    "prod:list": "pm2 ls",
+    "prod:monit": "pm2 monit"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
@@ -21,7 +28,9 @@
     "helmet": "^3.21.2",
     "jest": "^25.1.0",
     "log4js": "^6.1.1",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "pm2": "^4.2.3",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.6",
@@ -32,6 +41,7 @@
     "@types/log4js": "^2.3.5",
     "@types/morgan": "^1.7.37",
     "@types/node": "^13.7.0",
+    "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "eslint": "^6.8.0",
@@ -50,7 +60,7 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
-    "testRegex": "(/__tests__/.*|\\.(test.ts|spec.ts))\\.(ts|tsx|js)$",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -58,6 +68,10 @@
       "jsx",
       "json",
       "node"
+    ],
+    "testPathIgnorePatterns": [
+      "dist",
+      "node_modules"
     ]
   }
 }

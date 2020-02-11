@@ -1,9 +1,10 @@
 import { InteractionResult, RiskProfileCounted, RiskProfile } from './@types/risk-profile'
 import { InsuranceRange } from './@types/risk-profile.enum'
-import { countHouseOwnershipScore, countHasHouseScore } from '../services/score/counters/house.counter'
-import { countVehicleYearScore, countHasVehicleScore } from '../services/score/counters/vehicle.counter'
-import { countHasIncomeScore, countHasDependentsScore, countMartitalStatusScore, countHighIncomeScore, countYoungPeopleAgeScore, countMiddlePeopleAgeScore, countOlderPeopleScore } from '../services/score/counters/user.counter'
 import { countScore } from '../services/score/score.counter'
+import { ScoreCounter } from '../services/score/score'
+import * as UserCounters from '../services/score/counters/user.counter'
+import * as HouseCounter from '../services/score/counters/house.counter'
+import * as VehicleCounter from '../services/score/counters/vehicle.counter'
 
 const normalizeRange = (value: number | boolean): InsuranceRange => {
   if (value === false) return InsuranceRange.ineligible
@@ -24,18 +25,18 @@ const fromEntries = <Return, ListItem>(item: [string, ListItem][]): Return => {
 }
 
 export const determinateRiskProfile = (interactionResult: InteractionResult): RiskProfile => {
-  const scoreCounters = [
-    countHasIncomeScore,
-    countHasHouseScore,
-    countHouseOwnershipScore,
-    countHasVehicleScore,
-    countVehicleYearScore,
-    countHasDependentsScore,
-    countMartitalStatusScore,
-    countHighIncomeScore,
-    countYoungPeopleAgeScore,
-    countMiddlePeopleAgeScore,
-    countOlderPeopleScore
+  const scoreCounters: ScoreCounter[] = [
+    UserCounters.countHasIncomeScore,
+    UserCounters.countHasDependentsScore,
+    UserCounters.countMartitalStatusScore,
+    UserCounters.countHighIncomeScore,
+    UserCounters.countYoungPeopleAgeScore,
+    UserCounters.countMiddlePeopleAgeScore,
+    UserCounters.countOlderPeopleScore,
+    HouseCounter.countHasHouseScore,
+    HouseCounter.countHouseOwnershipScore,
+    VehicleCounter.countHasVehicleScore,
+    VehicleCounter.countVehicleYearScore
   ]
 
   const initialValue = interactionResult.risk_questions.filter((question) => question).length

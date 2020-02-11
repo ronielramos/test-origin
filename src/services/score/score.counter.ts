@@ -1,6 +1,7 @@
-import { InteractionResult, ScoreCount, RiskProfileCounted } from '../../risk-profile/@types/risk-profile'
+import { InteractionResult, RiskProfileCounted } from '../../risk-profile/@types/risk-profile'
+import { ScoreCounter } from './score'
 
-export const countScore = (riskQuestion: InteractionResult, scoreCounters: ScoreCount[], initialRiskProfile: RiskProfileCounted): RiskProfileCounted => {
+export const countScore = (riskQuestion: InteractionResult, scoreCounters: ScoreCounter[], initialRiskProfile: RiskProfileCounted): RiskProfileCounted => {
   const insurances = Object.keys(initialRiskProfile) as (keyof RiskProfileCounted)[]
 
   const riskProfileScored = { ...initialRiskProfile }
